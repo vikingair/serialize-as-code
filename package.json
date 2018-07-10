@@ -1,6 +1,6 @@
 {
   "name": "serialize-as-code",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Serialize any Javascript object as its source code",
   "main": "dist/serializer.js",
   "files": [
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fdc-viktor-luft/spy4js"
+    "url": "https://github.com/fdc-viktor-luft/serialize-as-code"
   },
   "keywords": [
     "serialize",
