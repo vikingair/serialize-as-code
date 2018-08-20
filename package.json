@@ -1,6 +1,6 @@
 {
   "name": "serialize-as-code",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Serialize any Javascript object as its source code",
   "main": "dist/serializer.js",
   "files": [

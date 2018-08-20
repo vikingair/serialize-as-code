@@ -18,6 +18,7 @@ describe('serialize', () => {
         expect(Serializer.run(true)).toBe('true');
         expect(Serializer.run(/^abc$/)).toBe('//^abc$//');
         expect(Serializer.run(Symbol.for('test'))).toBe("Symbol.for('test')");
+        expect(Serializer.run(Symbol('test'))).toBe('Symbol(test)'); // <- this one is a special case since it will never match because a unique symbol was used
         expect(Serializer.run(() => {})).toBe('Function');
         expect(Serializer.run(new Error('foo'))).toBe("new Error('foo')");
         const date = new Date(1531052672662);

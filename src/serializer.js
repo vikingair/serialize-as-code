@@ -97,7 +97,10 @@ const __serializerByType: { [optString]: (o: any) => string } = {
     Date: o => `new Date(${Number(o)})`,
     Number: o => String(o),
     Boolean: o => String(o),
-    Symbol: o => `Symbol.for('${(Symbol.keyFor(o): any)}')`,
+    Symbol: o =>
+        Symbol.keyFor(o) === undefined
+            ? o.toString() // unique symbol, therefore toString is the best choice
+            : `Symbol.for('${(Symbol.keyFor(o): any)}')`,
     Error: o => `new ${o.name}('${o.message}')`,
 };
 
