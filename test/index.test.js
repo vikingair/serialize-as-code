@@ -234,4 +234,10 @@ describe('serialize', () => {
         // $FlowFixMe - Flow does not allow to overwrite this func (and you never should do this in prod!)
         Object.prototype.toString = orig;
     });
+
+    it('serializes objects with different key order equally', () => {
+        expect(Serializer.run({ foo: 'bar', isIt: true })).toBe(
+            Serializer.run({ isIt: true, foo: 'bar' })
+        );
+    });
 });

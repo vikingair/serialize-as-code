@@ -117,6 +117,7 @@ const __serializeArray: _OSerializer = (o, custom, serialized) => {
 
 const __serializeObject: _Serializer = (o, custom, serialized) => {
     const oKeys = Object.keys(o);
+    oKeys.sort();
     const results = [];
     for (let i = 0; i < oKeys.length; i++) {
         const key = oKeys[i];
