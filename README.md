@@ -12,10 +12,8 @@ for most cases. ATTENTION: There is no functionality to parse the string back
 to the provided object. (one-direction-flow)
 
 ### Some aspects
-- `flow` support out-of-the-box
-- coverage of 100% is mandatory
-- < 1.2 kB (gzipped) (see [bundlephobia](https://bundlephobia.com/result?p=serialize-as-code))
-- any issues will be fixed as soon as possible
+- `flow` support included
+- ~ 1 kB (gzipped) (see [bundlephobia](https://bundlephobia.com/result?p=serialize-as-code))
 
 ### Installation
 ##### With yarn
