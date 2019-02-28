@@ -67,9 +67,9 @@ const __serializeReactElement: _Serializer = (o, custom, serialized) => {
     // because usually it is more helpful to see what was provided)
     // if (typeof o.type === 'function') return __serialize(new o.type(o.props).render(), custom, serialized);
     const children = __serializeChildren(o, custom, serialized);
-    return `<${type}${__serializeProps(o, custom, serialized)}${children
-        ? `>${children}</${type}>`
-        : ' />'}`;
+    return `<${type}${__serializeProps(o, custom, serialized)}${
+        children ? `>${children}</${type}>` : ' />'
+    }`;
 };
 
 const __serializeReact: _OSerializer = (o, custom, serialized) => {
@@ -92,7 +92,8 @@ const __serializeIfReact: _OSerializer = (o, custom, serialized) => {
 
 const __serializerByType: { [optString]: (o: any) => string } = {
     RegExp: o => `/${String(o)}/`,
-    String: o => `'${o}'`,
+    String: o =>
+        o.indexOf('"') === -1 && o.indexOf("'") !== -1 ? `"${o}"` : `'${o}'`,
     Function: o => o.name || 'Function',
     Date: o => `new Date(${Number(o)})`,
     Number: o => String(o),

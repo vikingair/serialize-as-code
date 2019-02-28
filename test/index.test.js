@@ -7,7 +7,7 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import { Serializer } from '../src/serializer';
+import { Serializer } from '../src/';
 
 describe('serialize', () => {
     it('serializes primitives', () => {
@@ -24,6 +24,16 @@ describe('serialize', () => {
         const date = new Date(1531052672662);
         expect(Serializer.run(date)).toBe('new Date(1531052672662)');
     });
+
+    it('escapes single quotes', () => {
+        expect(Serializer.run("here's that 'stuff'")).toBe(
+            `"here's that 'stuff'"`
+        );
+        expect(Serializer.run("here's \"that\" 'stuff'")).toBe(
+            "'here's \"that\" 'stuff''"
+        );
+    });
+
     it('serializes arrays', () => {
         expect(Serializer.run([])).toBe('[]');
         expect(Serializer.run([1, 'test', /^abc$/])).toBe(
