@@ -28,5 +28,12 @@
     "no-unused-vars": 2,
     "flowtype/require-valid-file-annotation": [2, "always"],
     "react/prop-types": 0
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "16.8.0",
+      "flowVersion": "0.93"
+    }
   }
 }
