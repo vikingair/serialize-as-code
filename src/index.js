@@ -98,6 +98,8 @@ const __serializerByType: { [optString]: (o: any) => string } = {
     Date: o => `new Date(${Number(o)})`,
     Number: o => String(o),
     Boolean: o => String(o),
+    Set: o => `new Set(${__serializeArray([...o.keys()], undefined, [])})`,
+    Map: o => `new Map(${__serializeArray([...o.entries()], undefined, [])})`,
     Symbol: o =>
         Symbol.keyFor(o) === undefined
             ? o.toString() // unique symbol, therefore toString is the best choice
@@ -105,14 +107,16 @@ const __serializerByType: { [optString]: (o: any) => string } = {
     Error: o => `new ${o.name}('${o.message}')`,
 };
 
-const __serializeArray: _OSerializer = (o, custom, serialized) => {
-    if (Array.isArray(o)) {
-        const results = [];
-        for (let i = 0; i < o.length; i++) {
-            results.push(__serialize(o[i], custom, serialized));
-        }
-        return `[${results.join(', ')}]`;
+const __serializeArray: _Serializer = (o: Array<any>, custom, serialized) => {
+    const results = [];
+    for (let i = 0; i < o.length; i++) {
+        results.push(__serialize(o[i], custom, serialized));
     }
+    return `[${results.join(', ')}]`;
+};
+
+const __serializeOptArray: _OSerializer = (o, custom, serialized) => {
+    if (Array.isArray(o)) return __serializeArray(o, custom, serialized);
 };
 
 const __serializeObject: _Serializer = (o, custom, serialized) => {
@@ -136,7 +140,7 @@ const Serialize: { [*]: _OSerializer } = {
     cyclomatic: (o, _, serialized) =>
         (serialized.indexOf(o) !== -1 && '>CYCLOMATIC<') || undefined,
     react: __serializeIfReact,
-    array: __serializeArray,
+    array: __serializeOptArray,
 };
 
 const __serialize: _Serializer = (o, custom, serialized) =>

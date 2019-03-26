@@ -23,6 +23,12 @@ describe('serialize', () => {
         expect(Serializer.run(new Error('foo'))).toBe("new Error('foo')");
         const date = new Date(1531052672662);
         expect(Serializer.run(date)).toBe('new Date(1531052672662)');
+        expect(Serializer.run(new Set(['foo', 'bar']))).toBe(
+            "new Set(['foo', 'bar'])"
+        );
+        expect(Serializer.run(new Map([['foo', 'bar'], ['blub', 3]]))).toBe(
+            "new Map([['foo', 'bar'], ['blub', 3]])"
+        );
     });
 
     it('escapes single quotes', () => {
@@ -239,5 +245,23 @@ describe('serialize', () => {
         expect(Serializer.run({ foo: 'bar', isIt: true })).toBe(
             Serializer.run({ isIt: true, foo: 'bar' })
         );
+    });
+
+    it('serializes maps/sets inside maps/sets', () => {
+        expect(
+            Serializer.run(
+                new Set([new Map([['foo', 'bar'], ['blub', 3]]), 'bar'])
+            )
+        ).toBe("new Set([new Map([['foo', 'bar'], ['blub', 3]]), 'bar'])");
+        expect(
+            Serializer.run(new Map([['foo', 'bar'], ['blub', new Set([2, 3])]]))
+        ).toBe("new Map([['foo', 'bar'], ['blub', new Set([2, 3])]])");
+    });
+
+    it('serializes maps/sets with duplicated keys/entries', () => {
+        expect(Serializer.run(new Map([['foo', 'bar'], ['foo', 3]]))).toBe(
+            "new Map([['foo', 3]])"
+        );
+        expect(Serializer.run(new Set([3, 3]))).toBe('new Set([3])');
     });
 });
