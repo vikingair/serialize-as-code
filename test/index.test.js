@@ -15,11 +15,17 @@ describe('serialize', () => {
         expect(Serializer.run(null)).toBe('null');
         expect(Serializer.run('test')).toBe("'test'");
         expect(Serializer.run(12)).toBe('12');
+        expect(Serializer.run(window.BigInt(13))).toBe('13n');
         expect(Serializer.run(true)).toBe('true');
         expect(Serializer.run(/^abc$/)).toBe('//^abc$//');
         expect(Serializer.run(Symbol.for('test'))).toBe("Symbol.for('test')");
         expect(Serializer.run(Symbol('test'))).toBe('Symbol(test)'); // <- this one is a special case since it will never match because a unique symbol was used
         expect(Serializer.run(() => {})).toBe('Function');
+        const FooFunction = () => {};
+        expect(Serializer.run(FooFunction)).toBe('FooFunction');
+        expect(Serializer.run(async () => {})).toBe('AsyncFunction');
+        const BarFunction = async () => {};
+        expect(Serializer.run(BarFunction)).toBe('BarFunction');
         expect(Serializer.run(new Error('foo'))).toBe("new Error('foo')");
         const date = new Date(1531052672662);
         expect(Serializer.run(date)).toBe('new Date(1531052672662)');

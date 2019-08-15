@@ -91,10 +91,12 @@ const __serializeIfReact: _OSerializer = (o, custom, serialized) => {
 };
 
 const __serializerByType: { [optString]: (o: any) => string } = {
+    BigInt: o => `${String(o)}n`,
     RegExp: o => `/${String(o)}/`,
     String: o =>
         o.indexOf('"') === -1 && o.indexOf("'") !== -1 ? `"${o}"` : `'${o}'`,
     Function: o => o.name || 'Function',
+    AsyncFunction: o => o.name || 'AsyncFunction',
     Date: o => `new Date(${Number(o)})`,
     Number: o => String(o),
     Boolean: o => String(o),
