@@ -4,6 +4,7 @@
   "description": "Serialize any Javascript object as its source code",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "types": "src/index.d.ts",
   "files": [
     "dist/esm",
     "dist/cjs",
