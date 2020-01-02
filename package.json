@@ -1,6 +1,6 @@
 {
   "name": "serialize-as-code",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Serialize any Javascript object as its source code",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -33,59 +33,25 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-flow": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-flow": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
-    "coveralls": "^3.0.6",
-    "eslint": "^6.2.2",
-    "eslint-config-prettier": "^6.1.0",
-    "eslint-plugin-flowtype": "^4.2.0",
-    "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-react": "^7.14.3",
-    "flow-bin": "^0.106.2",
+    "coveralls": "^3.0.9",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-flowtype": "^4.5.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.17.0",
+    "flow-bin": "^0.114.0",
     "jest": "^24.9.0",
-    "prettier": "^1.18.2",
-    "react": "^16.9.0",
-    "rollup": "^1.20.2",
+    "prettier": "^1.19.1",
+    "react": "^16.12.0",
+    "rollup": "^1.27.14",
     "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-flow-entry": "^0.3.1"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.js"
-    ],
-    "coverageReporters": [
-      "lcov"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "statements": 100,
-        "branches": 100,
-        "functions": 100,
-        "lines": 100
-      }
-    }
-  },
-  "babel": {
-    "comments": false,
-    "presets": [
-      "@babel/preset-react",
-      "@babel/preset-flow",
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "8"
-          }
-        }
-      ]
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties"
-    ]
+    "rollup-plugin-flow-entry": "^0.3.3"
   }
 }
