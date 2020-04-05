@@ -7,13 +7,13 @@
  */
 
 type optString = string | void;
-type CustomSerializer = any => optString;
+type CustomSerializer = (any) => optString;
 type _OSerializer = (any, CustomSerializer | void, Array<any>) => optString;
 type _Serializer = (any, CustomSerializer | void, Array<any>) => string;
 const NOP = () => {};
 
 const forEach = (o: Object, handler: (v: any, k: string) => any): void =>
-    Object.keys(o).forEach(k => handler(o[k], k));
+    Object.keys(o).forEach((k) => handler(o[k], k));
 
 const __typePattern = /^\[object ([^\]]+)]$/;
 const __getTypeOfObject = (o: any): optString =>
@@ -47,14 +47,14 @@ const __serializeChildren: _Serializer = (o, custom?, serialized) => {
     if (!children) return '';
     if (typeof children === 'string') return children;
     return Array.isArray(children)
-        ? children.map(v => __serialize(v, custom, serialized)).join('')
+        ? children.map((v) => __serialize(v, custom, serialized)).join('')
         : __serialize(children, custom, serialized);
 };
 
 const __reactTypeNameReader: { [optString]: (type: any) => optString } = {
-    String: type => type,
-    Function: type => type.name,
-    Symbol: type =>
+    String: (type) => type,
+    Function: (type) => type.name,
+    Symbol: (type) =>
         (Symbol.keyFor(type) === 'react.fragment' && 'Fragment') || undefined,
 };
 
@@ -91,22 +91,22 @@ const __serializeIfReact: _OSerializer = (o, custom, serialized) => {
 };
 
 const __serializerByType: { [optString]: (o: any) => string } = {
-    BigInt: o => `${String(o)}n`,
-    RegExp: o => `/${String(o)}/`,
-    String: o =>
+    BigInt: (o) => `${String(o)}n`,
+    RegExp: (o) => `/${String(o)}/`,
+    String: (o) =>
         o.indexOf('"') === -1 && o.indexOf("'") !== -1 ? `"${o}"` : `'${o}'`,
-    Function: o => o.name || 'Function',
-    AsyncFunction: o => o.name || 'AsyncFunction',
-    Date: o => `new Date(${Number(o)})`,
-    Number: o => String(o),
-    Boolean: o => String(o),
-    Set: o => `new Set(${__serializeArray([...o.keys()], undefined, [])})`,
-    Map: o => `new Map(${__serializeArray([...o.entries()], undefined, [])})`,
-    Symbol: o =>
+    Function: (o) => o.name || 'Function',
+    AsyncFunction: (o) => o.name || 'AsyncFunction',
+    Date: (o) => `new Date(${Number(o)})`,
+    Number: (o) => String(o),
+    Boolean: (o) => String(o),
+    Set: (o) => `new Set(${__serializeArray([...o.keys()], undefined, [])})`,
+    Map: (o) => `new Map(${__serializeArray([...o.entries()], undefined, [])})`,
+    Symbol: (o) =>
         Symbol.keyFor(o) === undefined
             ? o.toString() // unique symbol, therefore toString is the best choice
             : `Symbol.for('${(Symbol.keyFor(o): any)}')`,
-    Error: o => `new ${o.name}('${o.message}')`,
+    Error: (o) => `new ${o.name}('${o.message}')`,
 };
 
 const __serializeArray: _Serializer = (o: Array<any>, custom, serialized) => {
@@ -136,9 +136,9 @@ const __serializeObject: _Serializer = (o, custom, serialized) => {
 
 const Serialize: { [*]: _OSerializer } = {
     custom: (o, custom) => custom && custom(o),
-    undefOrNull: o =>
+    undefOrNull: (o) =>
         (o === undefined && 'undefined') || (o === null && 'null') || undefined,
-    flat: o => (__serializerByType[__getTypeOfObject(o)] || NOP)(o),
+    flat: (o) => (__serializerByType[__getTypeOfObject(o)] || NOP)(o),
     cyclomatic: (o, _, serialized) =>
         (serialized.indexOf(o) !== -1 && '>CYCLOMATIC<') || undefined,
     react: __serializeIfReact,
@@ -150,7 +150,7 @@ const __serialize: _Serializer = (o, custom, serialized) =>
     Serialize.undefOrNull(o, custom, serialized) ||
     Serialize.flat(o, custom, serialized) ||
     Serialize.cyclomatic(o, custom, serialized) ||
-    (nextSerialized =>
+    ((nextSerialized) =>
         Serialize.react(o, custom, nextSerialized) ||
         Serialize.array(o, custom, nextSerialized) ||
         __serializeObject(o, custom, nextSerialized))([...serialized, o]);

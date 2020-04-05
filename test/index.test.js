@@ -105,7 +105,7 @@ describe('serialize', () => {
     });
     it('serializes custom definitions', () => {
         const theVerySpecial = { very: 'special' };
-        const custom = o => {
+        const custom = (o) => {
             if (o === theVerySpecial) return '>>SPECIAL<<';
         };
         const customSerializer = Serializer.create(custom);
@@ -240,7 +240,7 @@ describe('serialize', () => {
         const orig = Object.prototype.toString;
 
         // $FlowFixMe - Flow does not allow to overwrite this func (and you never should do this in prod!)
-        Object.prototype.toString = function() {
+        Object.prototype.toString = function () {
             if (this === someSymbolWithSpecialType) return 'bar';
             return orig.call(this);
         };
