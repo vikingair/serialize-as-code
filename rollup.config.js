@@ -1,20 +1,20 @@
-import babel from 'rollup-plugin-babel';
-import flowEntry from 'rollup-plugin-flow-entry';
+import babel from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+
+const extensions = ['.ts', '.tsx'];
 
 export default {
-    input: 'src/index.js',
+    input: 'index.ts',
     plugins: [
+        resolve({ extensions }),
         babel({
+            extensions,
+            babelHelpers: 'bundled',
             exclude: 'node_modules/**',
-            presets: [['@babel/preset-env', { modules: false, targets: { node: "8" } }]] }
-        ),
-        flowEntry(),
+        }),
     ],
-    output: [{
-        dir: 'dist/cjs',
-        format: 'cjs'
-    },{
-        dir: 'dist/esm',
-        format: 'esm'
-    }]
+    output: [
+        { dir: 'dist/cjs', format: 'cjs' },
+        { dir: 'dist/esm', format: 'esm' },
+    ]
 };

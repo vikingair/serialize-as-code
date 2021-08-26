@@ -12,7 +12,7 @@ for most cases. ATTENTION: There is no functionality to parse the string back
 to the provided object. (one-direction-flow)
 
 ### Some aspects
-- `flow` support included
+- `TypeScript` support included
 - ~ 1 kB (gzipped) (see [bundlephobia](https://bundlephobia.com/result?p=serialize-as-code))
 
 ### Installation
@@ -58,7 +58,7 @@ const CustomSerializer = (o: any): string | void => {
 
 const YourSerializer = Serializer.create(CustomSerializer);
 
-console.log({canBe: 'nested', here: someObjectToMatch});
+console.log({ canBe: 'nested', here: someObjectToMatch });
 // prints: {canBe: 'nested', here: FOO}
 ```
 

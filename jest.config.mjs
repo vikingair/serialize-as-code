@@ -1,0 +1,11 @@
+export default {
+  collectCoverageFrom: ['src/**/*.ts?(x)'],
+  testMatch: ["<rootDir>/test/**/(*.)test.ts?(x)"],
+  coverageThreshold: { global: { statements: 100, branches: 100, functions: 100, lines: 100 } },
+  coverageDirectory: "<rootDir>/build/coverage",
+  testEnvironment: 'jsdom',
+  // transform: {
+  //   "\\.[jt]sx?$": "babel-jest"
+  // },
+  // extensionsToTreatAsEsm: [".ts", ".tsx"]
+};

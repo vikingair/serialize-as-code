@@ -3,38 +3,28 @@
  *
  * The LICENSE file can be found in the root directory of this project.
  *
- * @flow
  */
 
-type optString = string | void;
-type CustomSerializer = (any) => optString;
-type _OSerializer = (any, CustomSerializer | void, Array<any>) => optString;
-type _Serializer = (any, CustomSerializer | void, Array<any>) => string;
-const NOP = () => {};
+type optString = string | undefined | void;
+export type CustomSerializer = (arg: any) => optString;
+type _OSerializer = (arg: any, custom: CustomSerializer | undefined, serialized: unknown[]) => optString;
+type _Serializer = (arg: any, custom: CustomSerializer | undefined, serialized: unknown[]) => string;
+const NOP = () => undefined;
 
-const forEach = (o: Object, handler: (v: any, k: string) => any): void =>
-    Object.keys(o).forEach((k) => handler(o[k], k));
-
-const __typePattern = /^\[object ([^\]]+)]$/;
-const __getTypeOfObject = (o: any): optString =>
-    (__typePattern.exec(Object.prototype.toString.call(o)) || [undefined])[1];
+const __getTypeOfObject = (o: unknown): string => Object.prototype.toString.call(o).split(' ')[1].slice(0, -1);
 
 const __serializeProp = (
     key: string | number,
-    value: any,
-    custom?: CustomSerializer,
-    serialized: Array<any>
-): string =>
-    typeof value === 'string'
-        ? `${key}="${value}"`
-        : `${key}={${__serialize(value, custom, serialized)}}`;
+    value: unknown,
+    custom: CustomSerializer | undefined,
+    serialized: Array<unknown>
+): string => (typeof value === 'string' ? `${key}="${value}"` : `${key}={${__serialize(value, custom, serialized)}}`);
 
-const __serializeProps: _Serializer = (o, custom, serialized) => {
+const __serializeProps: _Serializer = (o: any, custom, serialized) => {
     const elemProps = o.props;
     const props = [];
-    forEach(elemProps, (v, k) => {
-        if (v !== undefined && k !== 'children')
-            props.push(__serializeProp(k, v, custom, serialized));
+    Object.entries(elemProps).forEach(([k, v]) => {
+        if (v !== undefined && k !== 'children') props.push(__serializeProp(k, v, custom, serialized));
     });
     if (o.key) props.push(__serializeProp('key', o.key, custom, serialized));
     if (o.ref) props.push(__serializeProp('ref', o.ref, custom, serialized));
@@ -42,7 +32,7 @@ const __serializeProps: _Serializer = (o, custom, serialized) => {
     return ' ' + props.join(' ');
 };
 
-const __serializeChildren: _Serializer = (o, custom?, serialized) => {
+const __serializeChildren: _Serializer = (o: any, custom, serialized) => {
     const children = o.props.children;
     if (!children) return '';
     if (typeof children === 'string') return children;
@@ -51,15 +41,15 @@ const __serializeChildren: _Serializer = (o, custom?, serialized) => {
         : __serialize(children, custom, serialized);
 };
 
-const __reactTypeNameReader: { [optString]: (type: any) => optString } = {
+const __reactTypeNameReader: {
+    [optString: string]: undefined | ((type: any) => optString);
+} = {
     String: (type) => type,
     Function: (type) => type.name,
-    Symbol: (type) =>
-        (Symbol.keyFor(type) === 'react.fragment' && 'Fragment') || undefined,
+    Symbol: (type) => (Symbol.keyFor(type) === 'react.fragment' && 'Fragment') || undefined,
 };
 
-const getTypeName = (type: any): optString =>
-    (__reactTypeNameReader[__getTypeOfObject(type)] || NOP)(type);
+const getTypeName = (type: any): optString => (__reactTypeNameReader[__getTypeOfObject(type)] || NOP)(type);
 
 const __serializeReactElement: _Serializer = (o, custom, serialized) => {
     const type = getTypeName(o.type) || 'UNKNOWN';
@@ -67,9 +57,7 @@ const __serializeReactElement: _Serializer = (o, custom, serialized) => {
     // because usually it is more helpful to see what was provided)
     // if (typeof o.type === 'function') return __serialize(new o.type(o.props).render(), custom, serialized);
     const children = __serializeChildren(o, custom, serialized);
-    return `<${type}${__serializeProps(o, custom, serialized)}${
-        children ? `>${children}</${type}>` : ' />'
-    }`;
+    return `<${type}${__serializeProps(o, custom, serialized)}${children ? `>${children}</${type}>` : ' />'}`;
 };
 
 const __serializeReact: _OSerializer = (o, custom, serialized) => {
@@ -85,16 +73,16 @@ const __serializeReact: _OSerializer = (o, custom, serialized) => {
 const __serializeIfReact: _OSerializer = (o, custom, serialized) => {
     if (Object.prototype.toString.call(o.$$typeof) === '[object Symbol]') {
         const key = Symbol.keyFor(o.$$typeof);
-        if (key && key.indexOf('react.') === 0)
-            return __serializeReact(o, custom, serialized);
+        if (key && key.indexOf('react.') === 0) return __serializeReact(o, custom, serialized);
     }
 };
 
-const __serializerByType: { [optString]: (o: any) => string } = {
+const __serializerByType: {
+    [optString: string]: undefined | ((o: any) => string);
+} = {
     BigInt: (o) => `${String(o)}n`,
     RegExp: (o) => `/${String(o)}/`,
-    String: (o) =>
-        o.indexOf('"') === -1 && o.indexOf("'") !== -1 ? `"${o}"` : `'${o}'`,
+    String: (o) => (o.indexOf('"') === -1 && o.indexOf("'") !== -1 ? `"${o}"` : `'${o}'`),
     Function: (o) => o.name || 'Function',
     AsyncFunction: (o) => o.name || 'AsyncFunction',
     Date: (o) => `new Date(${Number(o)})`,
@@ -105,7 +93,7 @@ const __serializerByType: { [optString]: (o: any) => string } = {
     Symbol: (o) =>
         Symbol.keyFor(o) === undefined
             ? o.toString() // unique symbol, therefore toString is the best choice
-            : `Symbol.for('${(Symbol.keyFor(o): any)}')`,
+            : `Symbol.for('${Symbol.keyFor(o) as any}')`,
     Error: (o) => `new ${o.name}('${o.message}')`,
 };
 
@@ -117,8 +105,16 @@ const __serializeArray: _Serializer = (o: Array<any>, custom, serialized) => {
     return `[${results.join(', ')}]`;
 };
 
-const __serializeOptArray: _OSerializer = (o, custom, serialized) => {
+const __serializeOptArray: _OSerializer = (o, custom, serialized): string | void => {
     if (Array.isArray(o)) return __serializeArray(o, custom, serialized);
+};
+
+// there is no adequate JS representation of HTML elements
+// and these elements are not always serializable because of there
+// possible immense size
+const __serializeHTML: _OSerializer = (o) => {
+    const objectType = o.constructor.name;
+    if (/^HTML[a-zA-Z]*Element$/.test(objectType)) return objectType;
 };
 
 const __serializeObject: _Serializer = (o, custom, serialized) => {
@@ -134,15 +130,14 @@ const __serializeObject: _Serializer = (o, custom, serialized) => {
     return `${displayedType}{${results.join(', ')}}`;
 };
 
-const Serialize: { [*]: _OSerializer } = {
+const Serialize: { [key: string]: _OSerializer } = {
     custom: (o, custom) => custom && custom(o),
-    undefOrNull: (o) =>
-        (o === undefined && 'undefined') || (o === null && 'null') || undefined,
+    undefOrNull: (o) => (o === undefined && 'undefined') || (o === null && 'null') || undefined,
     flat: (o) => (__serializerByType[__getTypeOfObject(o)] || NOP)(o),
-    cyclomatic: (o, _, serialized) =>
-        (serialized.indexOf(o) !== -1 && '>CYCLOMATIC<') || undefined,
+    cyclomatic: (o, _, serialized) => (serialized.indexOf(o) !== -1 && '>CYCLOMATIC<') || undefined,
     react: __serializeIfReact,
     array: __serializeOptArray,
+    HTML: __serializeHTML,
 };
 
 const __serialize: _Serializer = (o, custom, serialized) =>
@@ -153,13 +148,15 @@ const __serialize: _Serializer = (o, custom, serialized) =>
     ((nextSerialized) =>
         Serialize.react(o, custom, nextSerialized) ||
         Serialize.array(o, custom, nextSerialized) ||
+        Serialize.HTML(o, custom, nextSerialized) ||
         __serializeObject(o, custom, nextSerialized))([...serialized, o]);
 
-const _serialize = (o: any, custom?: CustomSerializer): string =>
-    __serialize(o, custom, []);
+const _serialize = (o: unknown, custom?: CustomSerializer): string => __serialize(o, custom, []);
 
 export const Serializer = {
-    run: (o: any): string => _serialize(o),
-    create: (custom: CustomSerializer) => (o: any): string =>
-        _serialize(o, custom),
+    run: (o: unknown): string => _serialize(o),
+    create:
+        (custom: CustomSerializer) =>
+        (o: unknown): string =>
+            _serialize(o, custom),
 };
