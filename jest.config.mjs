@@ -4,8 +4,6 @@ export default {
   coverageThreshold: { global: { statements: 100, branches: 100, functions: 100, lines: 100 } },
   coverageDirectory: "<rootDir>/build/coverage",
   testEnvironment: 'jsdom',
-  // transform: {
-  //   "\\.[jt]sx?$": "babel-jest"
-  // },
-  // extensionsToTreatAsEsm: [".ts", ".tsx"]
+  // currently doesn't work because of: https://github.com/alangpierce/sucrase/issues/654
+  // transform: { "\\.tsx?$": "@sucrase/jest-plugin" },
 };

@@ -248,4 +248,9 @@ describe('serialize', () => {
 
         expect(Serializer.run([div, span])).toBe('[HTMLDivElement, HTMLSpanElement]');
     });
+
+    it('serializes window & document', () => {
+        expect(Serializer.run(window)).toBe('window');
+        expect(Serializer.run(document)).toBe('document');
+    });
 });

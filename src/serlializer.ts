@@ -95,6 +95,8 @@ const __serializerByType: {
             ? o.toString() // unique symbol, therefore toString is the best choice
             : `Symbol.for('${Symbol.keyFor(o) as any}')`,
     Error: (o) => `new ${o.name}('${o.message}')`,
+    Window: () => `window`,
+    Document: () => `document`,
 };
 
 const __serializeArray: _Serializer = (o: Array<any>, custom, serialized) => {
@@ -113,7 +115,7 @@ const __serializeOptArray: _OSerializer = (o, custom, serialized): string | void
 // and these elements are not always serializable because of there
 // possible immense size
 const __serializeHTML: _OSerializer = (o) => {
-    const objectType = o.constructor.name;
+    const objectType = o.constructor?.name;
     if (/^HTML[a-zA-Z]*Element$/.test(objectType)) return objectType;
 };
 
@@ -125,7 +127,7 @@ const __serializeObject: _Serializer = (o, custom, serialized) => {
         const key = oKeys[i];
         results.push(`${key}: ${__serialize(o[key], custom, serialized)}`);
     }
-    const objectType = o.constructor.name;
+    const objectType = o.constructor?.name;
     const displayedType = objectType === 'Object' ? '' : objectType;
     return `${displayedType}{${results.join(', ')}}`;
 };
