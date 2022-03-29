@@ -6,7 +6,7 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import { Serializer } from '../src/serlializer';
+import { Serializer } from '../src';
 
 describe('serialize', () => {
     it('serializes primitives', () => {
@@ -252,5 +252,24 @@ describe('serialize', () => {
     it('serializes window & document', () => {
         expect(Serializer.run(window)).toBe('window');
         expect(Serializer.run(document)).toBe('document');
+    });
+
+    it('serializes a self expanding Proxy', () => {
+        // code that caused the error
+        const proxyTarget = {};
+        const _dotPrefix = (name: string, prefix = ''): string => (prefix && prefix + '.') + name;
+        const _createFieldNameProxy = (proxyTarget: any, prefix = ''): any =>
+            new Proxy(proxyTarget, {
+                get(target, prop) {
+                    if (prop === 'toString' || typeof prop === 'symbol') return () => prefix;
+                    // let the target grow with that property
+                    if (!target[prop]) target[prop] = _createFieldNameProxy(_dotPrefix(prop, prefix));
+                    return target[prop];
+                },
+            });
+
+        // It is not possible in JS to obtain if a given object is a Proxy or
+        // not so the best serialization possible is just the proxy target object
+        expect(Serializer.run(_createFieldNameProxy(proxyTarget))).toBe('{}');
     });
 });

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2022-03-29
+### Fixed
+- Prevent accessing property before checking its existence. This was causing auto-growing
+  Proxy to run into infinite loop.
+- Generating type interface instead of shipping real types to prevent TS errors for consumers.
+
 ## [2.0.1] - 2021-11-24
 ### Changed
 - Serializing `window` and `document` as globals
