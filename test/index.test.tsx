@@ -140,6 +140,7 @@ describe('serialize', () => {
         class TestComponent extends Component<{
             str: string;
             bool: boolean;
+            children?: React.ReactNode;
         }> {
             render() {
                 return <div className={this.props.str}>{String(this.props.bool)}</div>;

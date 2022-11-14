@@ -64,7 +64,7 @@ console.log({ canBe: 'nested', here: someObjectToMatch });
 
   
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
-[license-url]: https://github.com/fdc-viktor-luft/form4react/blob/master/LICENSE
+[license-url]: https://github.com/fdc-viktor-luft/serialize-as-code/blob/master/LICENSE
 [build-image]: https://img.shields.io/travis/fdc-viktor-luft/serialize-as-code/master.svg?style=flat-square
 [build-url]: https://app.travis-ci.com/github/fdc-viktor-luft/serialize-as-code
 [npm-image]: https://img.shields.io/npm/v/serialize-as-code.svg?style=flat-square
