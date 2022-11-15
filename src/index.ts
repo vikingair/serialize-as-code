@@ -71,7 +71,7 @@ const __serializeReact: _OSerializer = (o, custom, serialized) => {
 };
 
 const __serializeIfReact: _OSerializer = (o, custom, serialized) => {
-    // before accessing the prop "$$typeof" first check whether it exists. Otherwise we might trigger
+    // before accessing the prop "$$typeof" first check whether it exists. Otherwise, we might trigger
     // unwanted getters on Proxy objects
     if ('$$typeof' in o && Object.prototype.toString.call(o.$$typeof) === '[object Symbol]') {
         const key = Symbol.keyFor(o.$$typeof);

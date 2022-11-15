@@ -1,6 +1,6 @@
 [![GitHub license][license-image]][license-url]
-[![npm package][npm-image]][npm-url] 
-[![Travis][build-image]][build-url]
+[![npm package][npm-image]][npm-url]
+[![GitHub Push][push-image]][push-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 
 # serialize-as-code
@@ -65,8 +65,8 @@ console.log({ canBe: 'nested', here: someObjectToMatch });
   
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license-url]: https://github.com/fdc-viktor-luft/serialize-as-code/blob/master/LICENSE
-[build-image]: https://img.shields.io/travis/fdc-viktor-luft/serialize-as-code/master.svg?style=flat-square
-[build-url]: https://app.travis-ci.com/github/fdc-viktor-luft/serialize-as-code
+[push-image]: https://github.com/fdc-viktor-luft/serialize-as-code/actions/workflows/push.yml/badge.svg
+[push-url]: https://github.com/fdc-viktor-luft/serialize-as-code/actions/workflows/push.yml
 [npm-image]: https://img.shields.io/npm/v/serialize-as-code.svg?style=flat-square
 [npm-url]: https://www.npmjs.org/package/serialize-as-code
 [coveralls-image]: https://coveralls.io/repos/github/fdc-viktor-luft/serialize-as-code/badge.svg?branch=master
