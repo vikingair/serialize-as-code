@@ -16,11 +16,10 @@
     "jest": true
   },
   "rules": {
-    "prettier/prettier": "error",
-    "arrow-body-style": ["error", "as-needed"],
-    "no-unused-vars": "off",
-    "no-duplicate-imports": "error",
-    "no-console": "error",
+    "prettier/prettier": "warn",
+    "arrow-body-style": ["warn", "as-needed"],
+    "no-duplicate-imports": "warn",
+    "no-console": "warn",
     "@typescript-eslint/no-explicit-any": "off"
   }
 }

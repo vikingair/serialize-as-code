@@ -4,19 +4,16 @@
   "description": "Serialize any Javascript object as its source code",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "types": "index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
-    "dist/cjs",
-    "dist/esm",
-    "index.d.ts"
+    "dist"
   ],
   "scripts": {
-    "dist": "rm -rf dist && rollup -c && tsc -p tsconfig.publish.json && mv dist/index.d.ts index.d.ts && rm dist/index.js",
+    "dist": "rm -rf dist && rollup -c && tsc -p tsconfig.publish.json",
     "lint": "pnpm lint:es && pnpm lint:ts",
-    "lint:es": "eslint --ext .ts,.tsx src/ test/",
+    "lint:es": "eslint --ext .ts,.tsx src/ test/ --max-warnings 0",
     "lint:ts": "tsc",
-    "test": "pnpm lint && pnpm test:coverage",
-    "test:coverage": "jest --all --coverage",
+    "test": "jest --all --coverage --color",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
@@ -34,15 +31,14 @@
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@rollup/plugin-babel": "^6.0.2",
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "@types/jest": "^29.2.2",
+    "@sucrase/jest-plugin": "^3.0.0",
+    "@types/jest": "^29.2.3",
     "@types/react": "^18.0.25",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
-    "babel-jest": "^29.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "coveralls": "^3.1.1",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
@@ -53,6 +49,7 @@
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "rollup": "^3.3.0",
+    "sucrase": "^3.28.0",
     "typescript": "^4.8.4"
   }
 }

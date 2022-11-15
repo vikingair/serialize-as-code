@@ -2,8 +2,7 @@ export default {
   collectCoverageFrom: ['src/**/*.ts?(x)'],
   testMatch: ["<rootDir>/test/**/(*.)test.ts?(x)"],
   coverageThreshold: { global: { statements: 100, branches: 100, functions: 100, lines: 100 } },
-  coverageDirectory: "<rootDir>/build/coverage",
+  coverageDirectory: "<rootDir>/coverage",
   testEnvironment: 'jsdom',
-  // currently doesn't work because of: https://github.com/alangpierce/sucrase/issues/654
-  // transform: { "\\.tsx?$": "@sucrase/jest-plugin" },
+  transform: { "\\.(js|jsx|ts|tsx)$": "@sucrase/jest-plugin" },
 };
